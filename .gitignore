@@ -16,9 +16,7 @@ build/
 bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
-application.yml
 .env
-application.properties
 
 ### IntelliJ IDEA ###
 .idea

@@ -1,0 +1,18 @@
+spring:
+  config:
+    import: optional:file:.env[.properties]
+  application:
+    name: ${SPRING_APPLICATION_NAME}
+
+server:
+  port: ${SERVER_PORT}
+
+kakao:
+  client:
+    id: ${KAKAO_CLIENT_ID}
+  redirect:
+    uri: ${KAKAO_REDIRECT_URI}
+  response:
+    type: ${KAKAO_RESPONSE_TYPE}
+  grant:
+    type: ${KAKAO_GRANT_TYPE}
