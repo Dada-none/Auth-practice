@@ -8,10 +8,16 @@ server:
   port: ${SERVER_PORT}
 
 kakao:
+  auth:
+    uri: ${KAKAO_AUTH_URI}
+  api:
+    uri: ${KAKAO_API_URI}
   client:
     id: ${KAKAO_CLIENT_ID}
   redirect:
-    uri: ${KAKAO_REDIRECT_URI}
+    uri:
+      login: ${KAKAO_REDIRECT_URI_LOGIN}
+      logout: ${KAKAO_REDIRECT_URI_LOGOUT}
   response:
     type: ${KAKAO_RESPONSE_TYPE}
   grant:

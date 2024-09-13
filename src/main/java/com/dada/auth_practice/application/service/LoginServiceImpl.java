@@ -17,11 +17,20 @@ import reactor.core.publisher.Mono;
 @Service
 public class LoginServiceImpl implements LoginService {
 
+    @Value("${kakao.auth.uri}")
+    String kakaoAuthUri;
+
+    @Value("${kakao.api.uri}")
+    String kakaoApiUri;
+
     @Value("${kakao.client.id}")
     String kakaoClientId;
 
-    @Value("${kakao.redirect.uri}")
-    String kakaoRedirectUri;
+    @Value("${kakao.redirect.uri.login}")
+    String kakaoRedirectUriLogin;
+
+    @Value("${kakao.redirect.uri.logout}")
+    String kakaoRedirectUriLogout;
 
     @Value("${kakao.response.type}")
     String kakaoResponseType;
@@ -30,9 +39,16 @@ public class LoginServiceImpl implements LoginService {
     String kakaoGrantType;
 
     @Override
+    public String getAccessCode() {
+        return kakaoAuthUri + "/oauth/authorize?client_id=" +
+                kakaoClientId + "&redirect_uri=" +
+                kakaoRedirectUriLogin + "&response_type=code";
+    }
+
+    @Override
     public String getAccessToken(String code) {
 
-        WebClient webClient = WebClient.create("https://kauth.kakao.com");
+        WebClient webClient = WebClient.create(kakaoAuthUri);
 
         KakaoTokenResponseDto response = webClient
                 .post()
@@ -56,7 +72,7 @@ public class LoginServiceImpl implements LoginService {
         log.info("getUserInfo 집입");
         log.info("accessToken : {}", accessToken);
 
-        WebClient webClient = WebClient.create("https://kapi.kakao.com");
+        WebClient webClient = WebClient.create(kakaoApiUri);
 
         KakaoUserInfoResponseDto userInfo = webClient
                 .get()
@@ -80,7 +96,7 @@ public class LoginServiceImpl implements LoginService {
         log.info("logout 집입");
         log.info("accessToken : {}", accessToken);
 
-        WebClient webClient = WebClient.create("https://kapi.kakao.com");
+        WebClient webClient = WebClient.create(kakaoApiUri);
 
         KakaoLogoutResponseDto logout = webClient
                 .post()
@@ -99,11 +115,18 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
+    public String logoutWithKakaoAccount() {
+        return kakaoAuthUri + "/oauth/logout?client_id=" +
+                kakaoClientId + "&logout_redirect_uri=" +
+                kakaoRedirectUriLogout;
+    }
+
+    @Override
     public KakaoUnlinkResponseDto unlink(String accessToken) {
         log.info("unlink 집입");
         log.info("accessToken : {}", accessToken);
 
-        WebClient webClient = WebClient.create("https://kapi.kakao.com");
+        WebClient webClient = WebClient.create(kakaoApiUri);
 
         KakaoUnlinkResponseDto unlink = webClient
                 .post()
